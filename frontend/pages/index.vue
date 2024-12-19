@@ -57,15 +57,14 @@
 <script setup>
 const email = ref("");
 const password = ref("");
-// Router instance
+
+
 const router = useRouter();
-import { storeToRefs } from 'pinia'; // import storeToRefs helper hook from pinia
-import { useAuthStore } from '~/store/auth'; // import the auth store we just created
+import { storeToRefs } from 'pinia';
+import { useAuthStore } from '~/store/auth';
+import { useRouter } from 'vue-router';
 
-
-const { authenticateUser } = useAuthStore(); // use authenticateUser action from  auth store
-
-const { authenticated } = storeToRefs(useAuthStore()); // make authenticated state reactive with storeToRefs
+const { authenticated } = storeToRefs(useAuthStore());
 
 
 const user = ref({
@@ -75,7 +74,7 @@ const user = ref({
 
 const { ruleEmail, rulePassLen, ruleRequired } = useFormRules();
 definePageMeta({
-  layout: 'single',
+  layout: 'default2',
 });
 const submit = async () => {
   console.log(authenticated);

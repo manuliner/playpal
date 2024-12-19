@@ -1,0 +1,17 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "mongodb up",
+            "type": "shell",
+            "command": "docker-compose",
+            "args": [
+                "-f",
+                "docker-compose.yml",
+                "up",
+                "-d"
+            ],
+            "problemMatcher": []
+        }
+    ]
+}

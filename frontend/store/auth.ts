@@ -39,7 +39,32 @@ export const useAuthStore = defineStore('auth', {
         this.loggedInUser = {};
       }
     },
-    async authenticateUser({ username, password }: UserPayloadInterface) {
+    async signInOrUpWithEmail( email: UserPayloadInterface) {
+      this.loading = true;
+      
+      try {
+        const response = await fetch('https://api.example.com/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(email),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          this.authenticated = true;
+          this.loggedInUser = data.user;
+          useCookie('user', JSON.stringify(data.user));
+        } else {
+          console.error(data);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+
+      this.loading = false;
     },
 
     logUserOut() {

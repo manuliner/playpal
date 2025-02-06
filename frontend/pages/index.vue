@@ -3,52 +3,59 @@
     <VCol>
       <VRow no-gutters align="center" justify="center" class="fill-height">
         <VCol class="hidden-md-and-down fill-height" md="6" lg="7">
-          <VImg src="https://wallpaper.dog/large/5557744.jpg" cover
-            class="h-100 rounded-xl d-flex align-center justify-center">
-            <div class="text-center w-50 text-white mx-auto">
+          <VImg
+            src="https://wallpaper.dog/large/5557744.jpg"
+            cover
+            class="h-100 rounded-xl d-flex align-center justify-center"
+          >
+            <div class="text-center w-50 text-black mx-auto">
               <h2 class="mb-4">Wilkommen bei playPal</h2>
-              <p>
-                Deine Spielplatzverabredungs organisierer
-              </p>
+              <p>Deine Spielplatzverabredungs organisierer</p>
             </div>
           </VImg>
         </VCol>
+        <div class="text-center w-50 text-white mx-auto">
+          <h2 class="mb-4">Wilkommen bei playPal</h2>
+          <p>Deine Spielplatzverabredungs organisierer</p>
+        </div>
       </VRow>
 
       <VRow no-gutters align="center" justify="center" class="fill-height pt-10">
         <VCol cols="12" md="6" lg="5" sm="6">
           <VRow no-gutters align="center" justify="center">
-            <VCol cols="12" md="6">
-              <h1>Sign In</h1>
-              <p class="text-medium-emphasis">Enter your details to get started</p>
-
-              <VForm @submit.prevent="submit" class="mt-7">
-                <div class="mt-1">
-                  <label class="label text-grey-darken-2" for="email">Email</label>
-                  <VTextField :rules="[ruleRequired, ruleEmail]" v-model="email"
-                    prepend-inner-icon="fluent:mail-24-regular" id="email" name="email" type="email" />
+            <VCol>
+              <VRow>
+                <div class="text-center text-black mx-auto">
+                  <h2 class="mb-4">Sign in with email</h2>
                 </div>
-                <div class="mt-1">
-                  <label class="label text-grey-darken-2" for="password">Password</label>
-                  <VTextField :rules="[ruleRequired, rulePassLen]" v-model="password"
-                    prepend-inner-icon="fluent:password-20-regular" id="password" name="password" type="password" />
+              </VRow>
+              <VRow>
+                <div class="text-center text-black mx-auto">
+                  <p>
+                    Enter the email adress associated with your account and we'll send you a magic
+                    link. If you don't have an account, we will create one for you.
+                  </p>
                 </div>
-                <div class="mt-5">
-                  <VBtn type="submit" block min-height="44" class="gradient primary">Sign In</VBtn>
-                </div>
-              </VForm>
-              <p class="text-body-2 mt-10">
-                <NuxtLink to="/reset-password" class="font-weight-bold text-primary">Forgot password?</NuxtLink>
-              </p>
-              <p class="text-body-2 mt-4">
-                <span>Don't have an account?
-                  <NuxtLink to="/signup" class="font-weight-bold text-primary">Sign Up</NuxtLink>
-                </span>
-              </p>
+              </VRow>
+              <VRow class="pt-2">
+                <VTextField
+                  :rules="[ruleRequired, ruleEmail]"
+                  v-model="email"
+                  prepend-inner-icon="fluent:mail-24-regular"
+                  id="email"
+                  name="email"
+                  type="email"
+                />
+              </VRow>
+              <VRow>
+                <VBtn block min-height="44" class="gradient primary" @click="sendMagicLink">
+                  Sign In
+                </VBtn></VRow
+              >
             </VCol>
           </VRow>
+          <VRow>{{ authenticated }}</VRow>
         </VCol>
-        {{ authenticated }}
       </VRow>
     </VCol>
   </VContainer>
@@ -56,36 +63,29 @@
 
 <script setup>
 const email = ref("");
-const password = ref("");
-
 
 const router = useRouter();
-import { storeToRefs } from 'pinia';
-import { useAuthStore } from '~/store/auth';
-import { useRouter } from 'vue-router';
+import { storeToRefs } from "pinia";
+
+import { useAuthStore } from "~/store/auth";
+import { useRouter } from "vue-router";
+import { VCol, VTextField } from "vuetify/components";
 
 const { authenticated } = storeToRefs(useAuthStore());
+const { signInOrUpWithEmail } = useAuthStore();
 
-
-const user = ref({
-  username: 'emilys',
-  password: 'emilyspass'
-});
-
-const { ruleEmail, rulePassLen, ruleRequired } = useFormRules();
+const { ruleEmail, ruleRequired } = useFormRules();
 definePageMeta({
-  layout: 'default2',
+  layout: "default2",
 });
-const submit = async () => {
-  console.log(authenticated);
 
-
-  await authenticateUser(user.value); // call authenticateUser and pass the user object
-  // redirect to homepage if user is authenticated
-  if (authenticated) {
+const sendMagicLink = async () => {
+  console.log("sendMagicLink");
+  await signInOrUpWithEmail(email.value);
+  if (authenticated.value) {
     console.log("Login successful");
 
-    await router.push('/home');
+    await router.push("/home");
   }
 };
 </script>
